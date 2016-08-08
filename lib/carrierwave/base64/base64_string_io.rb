@@ -16,13 +16,23 @@ module Carrierwave
         bytes = ::Base64.decode64 encoded_bytes
 
         super bytes
+
+        unique_filename
       end
 
       def original_filename
         File.basename("#{@file_name}.#{@file_format}")
       end
 
+      def unique_filename
+        @file_name = "#{secure_token}"
+      end
+
       private
+
+      def secure_token
+        SecureRandom.uuid
+      end
 
       def get_file_format(description)
         regex = /([a-z0-9]+);base64\z/
